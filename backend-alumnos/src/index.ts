@@ -74,3 +74,18 @@ app.delete('/api/students/:id', async (req, res) => {
     res.status(500).json({ error: 'Error al eliminar el alumno' });
   }
 });
+
+app.get('/api/students/total/count', async (req, res) => {
+  try {
+    // Opción A (Más elegante con SQL):
+    const [rows] = await pool.query("SELECT COUNT(*) as total FROM student");
+    const total = (rows as any[])[0].total;
+    res.json({ total: total });
+
+    // Opción B (Si el alumno es muy novato y hace SELECT *):
+    // const [rows] = await pool.query("SELECT * FROM student");
+    // res.json({ total: (rows as any[]).length });
+  } catch (error) {
+    res.status(500).json({ error: 'Error' });
+  }
+});
